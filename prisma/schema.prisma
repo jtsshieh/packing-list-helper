@@ -1,0 +1,146 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model ClothingType {
+  name String @id
+
+  category ClothingCategory
+
+  clothes Clothing[]
+
+  @@map("clothing_types")
+}
+
+model Brand {
+  name String @id
+
+  clothes Clothing[]
+
+  @@map("brands")
+}
+
+model Clothing {
+  id String @id @default(cuid()) @map("id")
+
+  brandName String @map("brand_name")
+  brand     Brand  @relation(fields: [brandName], references: [name], onDelete: Cascade)
+
+  brandLine String? @map("brand_line")
+  color     String
+  number    Int?
+
+  modifier String?
+
+  typeName String       @map("type_name")
+  type     ClothingType @relation(fields: [typeName], references: [name])
+
+  userId String @map("user_id")
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  clothingProvisions ClothingProvision[]
+
+  @@unique([brandName, brandLine, color, typeName, number, modifier])
+  @@map("clothes")
+}
+
+model Trip {
+  id String @id @default(cuid())
+
+  name String
+
+  start DateTime
+  end   DateTime
+
+  mode TripMode @default(Provision)
+
+  userId String @map("user_id")
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  clothingProvisions  ClothingProvision[]
+  essentialProvisions EssentialProvision[]
+
+  @@map("trips")
+}
+
+model ClothingProvision {
+  id String @id @default(cuid())
+
+  day   DateTime
+
+  tripId String @map("trip_id")
+  trip   Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  clothingId String   @map("clothing_id")
+  clothing   Clothing @relation(fields: [clothingId], references: [id], onDelete: Cascade)
+
+  @@map("clothing_provisions")
+}
+
+model EssentialProvision {
+  id String @id @default(cuid())
+
+  tripId String @map("trip_id")
+  trip   Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  essentialId String    @map("essential_id")
+  essential   Essential @relation(fields: [essentialId], references: [id], onDelete: Cascade)
+
+  @@map("essential_provisions")
+}
+
+model Essential {
+  id String @id @default(cuid())
+
+  name String
+
+  userId String @map("user_id")
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  category     EssentialCategory
+
+  essentialProvisions EssentialProvision[]
+
+  @@map("essentials")
+}
+
+model User {
+  id String @id @default(cuid())
+  username String @unique
+  password String
+
+  clothes Clothing[]
+  essentials Essential[]
+  trips Trip[]
+
+  @@map("users")
+}
+
+enum ClothingCategory {
+  Top
+  Bottom
+  Accessory
+}
+
+enum EssentialCategory {
+  Toiletry
+  Electronic
+  Document
+}
+
+enum TripMode {
+  Provision
+  Pack
+  Audit
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
