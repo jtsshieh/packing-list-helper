@@ -3,9 +3,9 @@ import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 
-import { getAllBrands } from '../../../../../data/fetchers/brand';
+import { getAllBrands } from './_data/fetchers';
+import { CreateBrandDialog } from './brand-dialogs';
 import { BrandsList } from './brands-list';
-import { CreateBrandDialog } from './create-brand-dialog';
 
 export default async function Brands() {
 	const brands = await getAllBrands();
@@ -13,7 +13,7 @@ export default async function Brands() {
 	return (
 		<div className="h-svh w-screen p-8">
 			<Button size="icon" variant="ghost" className="mb-4" asChild>
-				<Link href="/public">
+				<Link href="/dashboard">
 					<ChevronLeft />
 				</Link>
 			</Button>

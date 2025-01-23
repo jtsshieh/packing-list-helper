@@ -1,0 +1,47 @@
+enum ClothingCategory {
+  Top
+  Bottom
+  Accessory
+}
+
+model Clothing {
+  id String @id @default(cuid()) @map("id")
+
+  brandName String @map("brand_name")
+  brand     Brand  @relation(fields: [brandName], references: [name], onDelete: Cascade)
+
+  brandLine String? @map("brand_line")
+  color     String
+  number    Int?
+
+  modifier String?
+
+  typeName String       @map("type_name")
+  type     ClothingType @relation(fields: [typeName], references: [name])
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  clothingProvisions ClothingProvision[]
+
+  @@unique([brandName, brandLine, color, typeName, number, modifier])
+  @@map("clothes")
+}
+
+model Brand {
+  name String @id
+
+  clothes Clothing[]
+
+  @@map("brands")
+}
+
+model ClothingType {
+  name String @id
+
+  category ClothingCategory
+
+  clothes Clothing[]
+
+  @@map("clothing_types")
+}

@@ -1,0 +1,26 @@
+enum TripMode {
+  Provision
+  Pack
+  Audit
+}
+
+model Trip {
+  id String @id @default(cuid())
+
+  name String
+
+  start DateTime
+  end   DateTime
+
+  mode TripMode @default(Provision)
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  clothingProvisions         ClothingProvision[]
+  essentialProvisions        EssentialProvision[]
+  containerProvisions        ContainerProvision[]
+  luggageProvisions          LuggageProvision[]
+
+  @@map("trips")
+}

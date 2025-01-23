@@ -5,6 +5,8 @@ export const colors = [
 	'Dark Grey',
 	'White',
 	'Beige',
+	'Brown',
+	'Cream',
 	'Light Blue',
 	'Blue',
 	'Dark Blue',

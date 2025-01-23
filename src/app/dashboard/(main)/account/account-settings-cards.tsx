@@ -1,6 +1,5 @@
 'use client';
 
-import { LoaderCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState, useTransition } from 'react';
 
@@ -24,10 +23,10 @@ import {
 } from '../../../../components/ui/dialog';
 import { Input } from '../../../../components/ui/input';
 import { useToast } from '../../../../components/ui/use-toast';
-import { changeUsername, deleteUser } from '../../../../data/actions/user';
-import { ClientUser } from '../../../../data/fetchers/user';
+import { changeUsername, deleteUser } from './_data/actions';
+import { UserDTO } from './_data/fetchers';
 
-export function AccountSettingsCards({ user }: { user: ClientUser }) {
+export function UsernameCard({ user }: { user: UserDTO }) {
 	const [username, setUsername] = useState(user.username);
 	const [isPending, startTransition] = useTransition();
 	const { toast } = useToast();
@@ -46,47 +45,47 @@ export function AccountSettingsCards({ user }: { user: ClientUser }) {
 				});
 			}
 		});
+
 	return (
-		<div className="flex w-full flex-col gap-4">
-			<Card>
-				<CardHeader>
-					<CardTitle>Username</CardTitle>
-					<CardDescription>
-						Choose a unique username that'll server as your credential for
-						logging in.
-					</CardDescription>
-				</CardHeader>
-				<CardContent>
-					<Input
-						disabled={isPending}
-						className="w-[300px]"
-						value={username}
-						onChange={(e) => setUsername(e.target.value)}
-					/>
-				</CardContent>
-				<CardFooter className="flex justify-end bg-neutral-100 py-4">
-					<Button onClick={onSaveUsernameChange}>
-						{isPending ? (
-							<LoaderCircle className="h-4 w-4 animate-spin" />
-						) : (
-							'Save'
-						)}
-					</Button>
-				</CardFooter>
-			</Card>
-			<Card>
-				<CardHeader>
-					<CardTitle>Delete Account</CardTitle>
-					<CardDescription>
-						This account and all associated data including clothes, essentials,
-						and trips will be permanently deleted. This action is irreversible.
-					</CardDescription>
-				</CardHeader>
-				<CardFooter className="mt-4 justify-end bg-red-100 py-4">
-					<DeleteAccountDialog />
-				</CardFooter>
-			</Card>
-		</div>
+		<Card>
+			<CardHeader>
+				<CardTitle>Username</CardTitle>
+				<CardDescription>
+					Choose a unique username that'll serve as your credential for logging
+					in.
+				</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<Input
+					disabled={isPending}
+					className="max-w-[300px]"
+					value={username}
+					onChange={(e) => setUsername(e.target.value)}
+				/>
+			</CardContent>
+			<CardFooter className="flex justify-end bg-neutral-100 py-4">
+				<Button onClick={onSaveUsernameChange} loading={isPending}>
+					Save
+				</Button>
+			</CardFooter>
+		</Card>
+	);
+}
+
+export function DeleteAccountCard({ user }: { user: UserDTO }) {
+	return (
+		<Card>
+			<CardHeader>
+				<CardTitle>Delete Account</CardTitle>
+				<CardDescription>
+					This account and all associated data including clothes, essentials,
+					and trips will be permanently deleted. This action is irreversible.
+				</CardDescription>
+			</CardHeader>
+			<CardFooter className="mt-4 justify-end bg-red-100 py-4">
+				<DeleteAccountDialog />
+			</CardFooter>
+		</Card>
 	);
 }
 

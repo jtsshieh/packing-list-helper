@@ -1,8 +1,8 @@
 import { redirect } from 'next/navigation';
-import { PropsWithChildren } from 'react';
+import React, { PropsWithChildren } from 'react';
 
-import { getCurrentUser } from '../../../data/fetchers/user';
-import { DashboardNav } from './dashboard-nav';
+import { getCurrentUser } from './account/_data/fetchers';
+import { DashboardNav, MobileDashboardNav } from './dashboard-nav';
 
 export default async function DashboardLayout({ children }: PropsWithChildren) {
 	const user = await getCurrentUser();
@@ -10,8 +10,13 @@ export default async function DashboardLayout({ children }: PropsWithChildren) {
 
 	return (
 		<div className="flex h-svh w-screen flex-col">
-			<DashboardNav user={user} />
-			<div className="flex-1 border-t bg-neutral-50 p-8">{children}</div>
+			<div className="hidden sm:block">
+				<DashboardNav user={user} />
+			</div>
+			<div className="flex justify-end p-2 px-4 sm:hidden">
+				<MobileDashboardNav user={user} />
+			</div>
+			<div className="flex flex-1 border-t bg-neutral-50 p-8">{children}</div>
 		</div>
 	);
 }

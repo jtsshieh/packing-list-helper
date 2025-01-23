@@ -1,0 +1,35 @@
+model Container {
+  id String @id @default(cuid())
+
+  order String
+
+  name String
+  type ContainerType
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  provisions ContainerProvision[]
+
+  @@map("containers")
+}
+
+model Luggage {
+  id String @id @default(cuid())
+
+  order String
+
+  name String
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  provisions LuggageProvision[]
+
+  @@map("luggage")
+}
+
+enum ContainerType {
+  Clothes
+  Essentials
+}

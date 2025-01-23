@@ -1,0 +1,19 @@
+enum EssentialCategory {
+  Toiletry
+  Electronic
+  Document
+}
+
+model Essential {
+  id String @id @default(cuid())
+
+  name     String
+  category EssentialCategory
+
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  essentialProvisions EssentialProvision[]
+
+  @@map("essentials")
+}
