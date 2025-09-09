@@ -10,9 +10,10 @@ async function TripViewerLayout({
 	params,
 }: {
 	children: ReactNode;
-	params: { tripId: string };
+	params: Promise<{ tripId: string }>;
 }) {
-	const trip = await getTrip(params.tripId);
+	const { tripId } = await params;
+	const trip = await getTrip(tripId);
 	if (!trip) return notFound();
 
 	return (
@@ -42,7 +43,7 @@ function TripViewerLoading() {
 
 export default function TripViewerLayoutSuspended(props: {
 	children: ReactNode;
-	params: { tripId: string };
+	params: Promise<{ tripId: string }>;
 }) {
 	return (
 		<Suspense fallback={<TripViewerLoading />}>

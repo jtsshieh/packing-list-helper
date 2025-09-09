@@ -54,25 +54,13 @@ const navRoutes = [
 		name: 'Containers',
 		icon: <Box />,
 		href: '/containers',
-		mode: [TripMode.Provision],
+		mode: [TripMode.Provision, TripMode.Pack],
 	},
 	{
 		name: 'Luggage',
 		icon: <Luggage />,
 		href: '/luggage',
-		mode: [TripMode.Provision],
-	},
-	{
-		name: 'Containers',
-		icon: <Box />,
-		href: '/containers',
-		mode: [TripMode.Pack],
-	},
-	{
-		name: 'Luggage',
-		icon: <Luggage />,
-		href: '/luggage',
-		mode: [TripMode.Pack],
+		mode: [TripMode.Provision, TripMode.Pack],
 	},
 	{
 		name: 'Search',

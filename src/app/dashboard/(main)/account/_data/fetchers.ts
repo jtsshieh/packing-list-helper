@@ -16,7 +16,7 @@ const jwtSchema = z.object({
 	sub: z.string(),
 });
 async function _getCurrentUser(): Promise<UserDTO | null> {
-	const token = cookies().get('auth');
+	const token = (await cookies()).get('auth');
 	if (!token) return null;
 
 	let jwtUser;

@@ -8,15 +8,16 @@ import { getFullTrip } from '../_data/fetchers';
 import { SearchView } from './search-view';
 import { SearchResult } from './types';
 
-export default async function SearchPage({
-	params,
-}: {
-	params: { tripId: string };
-}) {
-	const trip = await getFullTrip(params.tripId);
-	if (!trip) return notFound();
+export default async function SearchPage(
+    props: {
+        params: Promise<{ tripId: string }>;
+    }
+) {
+    const params = await props.params;
+    const trip = await getFullTrip(params.tripId);
+    if (!trip) return notFound();
 
-	const clothingProvisionSearchResults: SearchResult[] =
+    const clothingProvisionSearchResults: SearchResult[] =
 		trip.clothingProvisions.map((clothingProvision) => ({
 			id: clothingProvision.id,
 			type: 'clothing',
@@ -29,7 +30,7 @@ export default async function SearchPage({
 			clothingDay: clothingProvision.day,
 		}));
 
-	const essentialProvisionSearchResults: SearchResult[] =
+    const essentialProvisionSearchResults: SearchResult[] =
 		trip.essentialProvisions.map((essentialProvision) => ({
 			id: essentialProvision.id,
 			type: 'essential',
@@ -42,7 +43,7 @@ export default async function SearchPage({
 			essentialCategory: essentialProvision.essential.category,
 		}));
 
-	const containerProvisionSearchResults: SearchResult[] =
+    const containerProvisionSearchResults: SearchResult[] =
 		trip.containerProvisions.map((containerProvision) => ({
 			id: containerProvision.id,
 			type: 'container',
@@ -62,7 +63,7 @@ export default async function SearchPage({
 			],
 		}));
 
-	const luggageProvisionSearchResults: SearchResult[] =
+    const luggageProvisionSearchResults: SearchResult[] =
 		trip.luggageProvisions.map((luggageProvision) => ({
 			id: luggageProvision.id,
 			type: 'luggage',
@@ -84,14 +85,14 @@ export default async function SearchPage({
 			]),
 		}));
 
-	const searchResults = [
+    const searchResults = [
 		...luggageProvisionSearchResults,
 		...containerProvisionSearchResults,
 		...clothingProvisionSearchResults,
 		...essentialProvisionSearchResults,
 	];
 
-	return (
+    return (
 		<>
 			<div className="mb-4 flex items-center gap-4">
 				<Search className="h-10 w-10" />

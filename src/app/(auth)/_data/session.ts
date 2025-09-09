@@ -4,11 +4,12 @@ import { randomBytes } from 'node:crypto';
 import { redis } from '../../../lib/db.server';
 
 export async function createChallengeSession(challenge: string) {
-	const cookie = cookies().get('session');
+	const cookieStore = await cookies();
+	const cookie = cookieStore.get('session');
 	if (cookie) await deleteChallengeSession();
 
 	const sessionId = randomBytes(16).toString('base64');
-	cookies().set('session', sessionId, {
+	cookieStore.set('session', sessionId, {
 		httpOnly: true,
 		secure: process.env.NODE_ENV === 'production',
 		maxAge: 60 * 5,
@@ -19,7 +20,8 @@ export async function createChallengeSession(challenge: string) {
 }
 
 export async function getChallengeSession() {
-	const cookie = cookies().get('session');
+	const cookieStore = await cookies();
+	const cookie = cookieStore.get('session');
 	if (!cookie) return;
 
 	const val = await redis.get(cookie.value);
@@ -29,9 +31,10 @@ export async function getChallengeSession() {
 }
 
 export async function deleteChallengeSession() {
-	const cookie = cookies().get('session');
+	const cookieStore = await cookies();
+	const cookie = cookieStore.get('session');
 	if (!cookie) return;
 
 	await redis.del(cookie.value);
-	cookies().delete('session');
+	cookieStore.delete('session');
 }

@@ -248,7 +248,7 @@ async function _signIn(userId: string) {
 		.setExpirationTime('1 week')
 		.sign(new TextEncoder().encode(process.env.JWT_SECRET!));
 
-	cookies().set('auth', jwt, {
+	(await cookies()).set('auth', jwt, {
 		httpOnly: true,
 		secure: process.env.NODE_ENV === 'production',
 		maxAge: 60 * 60 * 24 * 7,
@@ -271,7 +271,7 @@ export async function signInWithPassword(username: string, password: string) {
 }
 
 export async function signOut() {
-	cookies().delete('auth');
+	(await cookies()).delete('auth');
 	revalidatePath('/dashboard');
 	return { success: true };
 }
